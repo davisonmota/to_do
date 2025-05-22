@@ -6,21 +6,18 @@ import Buffer "mo:base/Buffer";
 actor {
 
   type Tarefa = {
-    id : Nat; // Identificador único da tarefa
-    categoria : Text; // Categoria da tarefa
-    descricao : Text; // Descrição detalhada da tarefa
-    urgente : Bool; // Indica se a tarefa é urgente (true) ou não (false)
-    concluida : Bool; // Indica se a tarefa foi concluída (true) ou não (false)
+    id : Nat;
+    categoria : Text;
+    descricao : Text;
+    urgente : Bool;
+    concluida : Bool;
   };
 
-  /* Esta variável será utilizada para armazenar o número do último identificador gerado para uma tarefa.
-    Ela será incrementada sempre que uma nova tarefa for adicionada */
+  
   var idTarefa : Nat = 0;
 
-  // Esta estrutura será utilizada para armazenar as "tarefas"
   var tarefas : Buffer.Buffer<Tarefa> = Buffer.Buffer<Tarefa>(10);
 
-  // Função para adicionar itens ao buffer 'tarefas'.
   public func addTarefa(desc : Text, cat : Text, urg : Bool, con : Bool) : async () {
     idTarefa += 1; 
     let t : Tarefa = {
@@ -33,7 +30,6 @@ actor {
     tarefas.add(t);
   };
 
-  // Função para remover itens ao buffer 'tarefas'.
   public func excluirTarefa(idExcluir : Nat) : async () {
 
     func localizaExcluir(i : Nat, x : Tarefa) : Bool {
@@ -44,7 +40,6 @@ actor {
 
   };
 
-  // Função para alterar itens ao buffer 'tarefas'.
   public func alterarTarefa(idTar : Nat, cat : Text, desc : Text, urg : Bool, con : Bool) : async () {
 
     let t : Tarefa = {
@@ -72,8 +67,19 @@ actor {
 
   };
 
-  // Função para retornar os itens do buffer 'tarefas'.
   public func getTarefas() : async [Tarefa] {
     return Buffer.toArray(tarefas);
+  };
+
+  public func totalTarefasConcluidas() : async Nat {
+    var countCompletedTasks = 0;
+
+    for (tarefa in tarefas.vals()){
+      if(tarefa.concluida == true){
+        countCompletedTasks += 1;
+      }
+    };
+
+    return countCompletedTasks;
   };
 };

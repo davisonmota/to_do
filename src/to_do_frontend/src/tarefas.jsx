@@ -4,13 +4,15 @@ import { to_do_backend } from 'declarations/to_do_backend';
 
 function tarefas() {
   const [tarefas, setTarefas] = useState([]);
+  const [totalTarefasConcluidas, setTotalTarefasConcluidas] = useState(0)
 
   useEffect(() => {
     consultarTarefas();
   }, []);
   
   async function consultarTarefas(){
-      setTarefas(await to_do_backend.getTarefas());    
+        setTarefas(await to_do_backend.getTarefas()); 
+        setTotalTarefasConcluidas(Number(await to_do_backend.totalTarefasConcluidas())); 
   }
 
   async function handleSubmit(event) {
@@ -45,8 +47,9 @@ function tarefas() {
   }
 
   async function alterar( id, categoria, descricao, urgente, concluida) {      
-    await to_do_backend.alterarTarefa( parseInt(id), categoria, descricao, urgente, concluida );    
+    await to_do_backend.alterarTarefa( parseInt(id), categoria, descricao, urgente, concluida ); 
     consultarTarefas();    
+
   }
 
   async function editar( id, categoria, descricao, urgente ) {              
@@ -197,6 +200,9 @@ function tarefas() {
                         ))}                     
                         
                     </ul>
+                    <div class="flex justify-end">
+                        <span class="text-right font-bold">TOTAL {totalTarefasConcluidas}</span>
+                    </div>
             </div>
         </div>
 
